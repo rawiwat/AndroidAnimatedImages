@@ -8,6 +8,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -41,11 +42,12 @@ class MainActivity : AppCompatActivity() {
             decrementPointer()
             animated_image.setImageDrawable(ContextCompat.getDrawable(this, drawableIds[pointer]))
         }
-        button_play.setOnClickListener{
+        button_play.setOnClickListener{ view ->
             when(pointer){
                 0->animatedgif(drawableIds[pointer])
                 1->animatedAnimationDrawable(drawableIds[pointer])
             }
+            animatedVectorDrawable(R.drawable.avd_playtopause, view as ImageView)
         }
 
 
@@ -57,8 +59,12 @@ class MainActivity : AppCompatActivity() {
         //animatedAnimationDrawable()
         /*this use vector drawable*/
 
-        val animatedVectorDrawable = ContextCompat.getDrawable(this,R.drawable.avd_playtopause)
-        animated_image.setImageDrawable(animatedVectorDrawable)
+        //animatedVectorDrawable()
+    }
+
+    private fun animatedVectorDrawable(id: Int,view: ImageView) {
+        val animatedVectorDrawable = ContextCompat.getDrawable(this, id)
+        view.setImageDrawable(animatedVectorDrawable)
         (animatedVectorDrawable as Animatable).start()
     }
 
