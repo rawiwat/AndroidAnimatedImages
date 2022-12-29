@@ -12,25 +12,68 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    val drawableIds = listOf(R.drawable.actually,R.drawable.bonk_animated)
+    var pointer = 0
+    fun incrementPointer(){
+        pointer ++
+        if(pointer>= drawableIds.size){
+            pointer=0
+        }
+    }
+    fun decrementPointer() {
+        pointer--
+        if(pointer<0){
+            pointer = drawableIds.size - 1
+        }
+    }
+
     @SuppressLint("WrongThread")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /*
-        this add and animate a gif
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val gifDrawable = ImageDecoder.decodeDrawable(ImageDecoder.createSource(resources, R.drawable.amogus))
-            animated_image.setImageDrawable(gifDrawable)
-            (gifDrawable as AnimatedImageDrawable).start()
+
+        button_next.setOnClickListener{
+            incrementPointer()
+            animated_image.setImageDrawable(ContextCompat.getDrawable(this, drawableIds[pointer]))
         }
-        this add gif with animated drawable
-        val frameDrawable = ContextCompat.getDrawable(this,R.drawable.bonk_animated)
-        animated_image.setImageDrawable(frameDrawable)
-        (frameDrawable as AnimationDrawable).start()
-        this use vector drawable
-        */
+        button_previous.setOnClickListener{
+            decrementPointer()
+            animated_image.setImageDrawable(ContextCompat.getDrawable(this, drawableIds[pointer]))
+        }
+        button_play.setOnClickListener{
+            when(pointer){
+                0->animatedgif(drawableIds[pointer])
+                1->animatedAnimationDrawable(drawableIds[pointer])
+            }
+        }
+
+
+        /*this add and animate a gif*/
+
+
+        //animatedgif()
+        /*this add gif with animated drawable*/
+        //animatedAnimationDrawable()
+        /*this use vector drawable*/
+
         val animatedVectorDrawable = ContextCompat.getDrawable(this,R.drawable.avd_playtopause)
         animated_image.setImageDrawable(animatedVectorDrawable)
         (animatedVectorDrawable as Animatable).start()
+    }
+
+    private fun animatedAnimationDrawable(id: Int) {
+        val frameDrawable = ContextCompat.getDrawable(this, id)
+        animated_image.setImageDrawable(frameDrawable)
+        (frameDrawable as AnimationDrawable).start()
+    }
+
+    private fun animatedgif(id: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val gifDrawable =
+                ImageDecoder.decodeDrawable(ImageDecoder.createSource(resources, id))
+            animated_image.setImageDrawable(gifDrawable)
+            (gifDrawable as AnimatedImageDrawable).start()
+        }
     }
 }
