@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     val drawableIds = listOf(R.drawable.actually,R.drawable.bonk_animated)
     var pointer = 0
+    var pause = 0
     fun incrementPointer(){
         pointer ++
         if(pointer>= drawableIds.size){
@@ -43,11 +44,18 @@ class MainActivity : AppCompatActivity() {
             animated_image.setImageDrawable(ContextCompat.getDrawable(this, drawableIds[pointer]))
         }
         button_play.setOnClickListener{ view ->
+            pause++
             when(pointer){
                 0->animatedgif(drawableIds[pointer])
                 1->animatedAnimationDrawable(drawableIds[pointer])
             }
-            animatedVectorDrawable(R.drawable.avd_playtopause, view as ImageView)
+            if (pause == 1){
+                animatedVectorDrawable(R.drawable.avd_playtopause, view as ImageView)
+            } else{
+            animatedVectorDrawable2(R.drawable.avd_pausetoplay,view as ImageView)
+                pause-=2
+            }
+
         }
 
 
@@ -67,11 +75,21 @@ class MainActivity : AppCompatActivity() {
         view.setImageDrawable(animatedVectorDrawable)
         (animatedVectorDrawable as Animatable).start()
     }
+    private fun animatedVectorDrawable2(id: Int,view: ImageView) {
+        val animatedVectorDrawable = ContextCompat.getDrawable(this, id)
+        view.setImageDrawable(animatedVectorDrawable)
+        (animatedVectorDrawable as Animatable).start()
+    }
 
     private fun animatedAnimationDrawable(id: Int) {
         val frameDrawable = ContextCompat.getDrawable(this, id)
         animated_image.setImageDrawable(frameDrawable)
+
+        if(pause == 2){
+            (frameDrawable as AnimationDrawable).stop()
+        }else{
         (frameDrawable as AnimationDrawable).start()
+        }
     }
 
     private fun animatedgif(id: Int) {
@@ -79,7 +97,9 @@ class MainActivity : AppCompatActivity() {
             val gifDrawable =
                 ImageDecoder.decodeDrawable(ImageDecoder.createSource(resources, id))
             animated_image.setImageDrawable(gifDrawable)
-            (gifDrawable as AnimatedImageDrawable).start()
+            if(pause == 2){
+            (gifDrawable as AnimatedImageDrawable).stop()
+            }else{(gifDrawable as AnimatedImageDrawable).start()}
         }
-    }
+        }
 }
